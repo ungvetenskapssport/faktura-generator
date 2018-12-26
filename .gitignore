@@ -1,0 +1,9 @@
+__pycache__
+*.pyc
+
+*.toc
+*.aux
+*.out
+*.log
+*.pdf
+*.tex

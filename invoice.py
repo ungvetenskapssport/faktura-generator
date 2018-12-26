@@ -1,5 +1,4 @@
-% Inspiration taken from Andreas Lundblad http://www.csc.kth.se/~landreas/invoice_template/
-\documentclass[a4paper,11pt]{article}
+content = r'''\documentclass[a4paper,11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[swedish]{babel}
 \usepackage[sc]{mathpazo}
@@ -21,22 +20,21 @@
 \def\inc{\stepcounter{cnt}\thecnt}
 \gdef\TotalHT{0}
 
-\newcommand{\product}[3]{%
+\newcommand{\product}[3]{
 \inc &#1  &#2 kr  &#3  &\FPmul\temp{#2}{#3}\FPround\temp{\temp}{2}\temp~kr
-%% Totalize
-\FPadd\total{\TotalHT}{\temp}%
-\FPround\total{\total}{2}%
-\global\let\TotalHT\total%
+\FPadd\total{\TotalHT}{\temp}
+\FPround\total{\total}{2}
+\global\let\TotalHT\total
 \\ }
 \newcommand{\totalttc}{\TotalHT~kr}
 
 \newcommand{\tax}{
   \FPmul\temp{\TotalHT}{.25}
   \FPround\temp{\temp}{2}
-  \temp~kr%
-  \FPadd\totaltax{\TotalHT}{\temp}%
-  \FPround\totaltax{\totaltax}{2}%
-  \global\let\TotalHT\totaltax%
+  \temp~kr
+  \FPadd\totaltax{\TotalHT}{\temp}
+  \FPround\totaltax{\totaltax}{2}
+  \global\let\TotalHT\totaltax
 }
 
 
@@ -44,7 +42,7 @@
 
 
 \pagestyle{fancy}
-\fancyhf{} % clear all header and footer fields
+\fancyhf{}
 \fancyfoot[R]{\footnotesize Sida \thepage\ av \pageref{LastPage}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
@@ -57,30 +55,30 @@
 
 
 
-\fancyput*(230pt,-22pt){\ovalbox{%
+\fancyput*(230pt,-22pt){\ovalbox{
     \begin{minipage}{215pt}
       \huge Faktura
     \end{minipage}}}
 
-\fancyput*(230pt,-82pt){\ovalbox{%
+\fancyput*(230pt,-82pt){\ovalbox{
     \begin{minipage}{87pt}
-      \textbf{Fakturanummer:}\\%s
+      \textbf{Fakturanummer:}\\ %(invoice_number)s 
     \end{minipage}}}
 
-\fancyput*(358pt,-82pt){\ovalbox{%
+\fancyput*(358pt,-82pt){\ovalbox{
     \begin{minipage}{87pt}
-      \textbf{Fakturadatum:}\\%s
+      \textbf{Fakturadatum:}\\ %(invoice_date)s
     \end{minipage}}}
 
 \vspace{3em}
 \textbf{Fakturaadress:}\\[1em]
-%s
+%(address)s
 
 \fancyput*(230pt,-172pt){
     \begin{minipage}{85pt}
       \begin{tabular}{ll}
-        \textbf{Er referens} & %s\\
-        \textbf{Vår referens} & %s \\
+        \textbf{Er referens} & %(your_ref)s \\
+        \textbf{Vår referens} & %(our_ref)s \\
         \textbf{Betalningsvilkor} & 30 dagar
       \end{tabular}
     \end{minipage}}
@@ -92,28 +90,22 @@
 \begin{tabular*}{\linewidth}{cp{8.9cm}rcr}\hline\hline
 \textbf{Post} & \textbf{Benämning}  & \multicolumn{1}{l}{\textbf{\`A-pris}} &  \multicolumn{1}{l}{\textbf{Antal}} & \multicolumn{1}{l}{\textbf{Summa}} \\
 \hline
-    %s
-    %\product{Datortillbehör}{8000.00}{1}
-    %\product{Hårddisk, 500 gb}{1500.00}{3}
-    %\product{Produkt nummer 3}{300.00}{10}
-    %\product{Produkt nummer 4}{260.00}{5}
+    %(products)s
 
     &&&&\\[5em]
 
-    %\multicolumn{4}{r@{~~~}}{\textbf{Moms (25 \%)}} & \tax\\
     \multicolumn{4}{r@{~~~}}{\textbf{Att betala}} & \totalttc\\
 \hline\hline
 \end{tabular*}
 \renewcommand\arraystretch{1}
 
-\fancyput*(-17pt,-580pt){\ovalbox{%
+\fancyput*(-17pt,-580pt){\ovalbox{
     \begin{minipage}{450pt}
-      \small Ange fakturanummer som referens vid inbetalning%Vid betalning efter förfallodagen tillkommer påminnelseavgift om 50 kr samt 10 \% dröjsmålsränta.
+      \small Ange fakturanummer som referens vid inbetalning.
     \end{minipage}}}
 
 
-%TODO
-\fancyput*(-17pt,-670pt){\mbox{%
+\fancyput*(-17pt,-670pt){\mbox{
     \begin{minipage}{530pt}
       \begin{tabularx}{530pt}{XXX}
       \textbf{Adress:}  & \textbf{Kontonummer} & \textbf{Organisationsnummer} \\
@@ -124,4 +116,4 @@
       \end{tabularx}
     \end{minipage}}}
 
-\end{document}
+\end{document}'''
