@@ -1,4 +1,4 @@
-content = r'''\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[swedish]{babel}
 \usepackage[sc]{mathpazo}
@@ -62,23 +62,23 @@ content = r'''\documentclass[a4paper,11pt]{article}
 
 \fancyput*(230pt,-82pt){\ovalbox{
     \begin{minipage}{87pt}
-      \textbf{Fakturanummer:}\\ %(invoice_number)s 
+      \textbf{Fakturanummer:}\\ INVOICENUMBER 
     \end{minipage}}}
 
 \fancyput*(358pt,-82pt){\ovalbox{
     \begin{minipage}{87pt}
-      \textbf{Fakturadatum:}\\ %(invoice_date)s
+      \textbf{Fakturadatum:}\\ INVOICEDATE
     \end{minipage}}}
 
 \vspace{3em}
 \textbf{Fakturaadress:}\\[1em]
-%(address)s
+ADDRESS
 
 \fancyput*(230pt,-172pt){
     \begin{minipage}{85pt}
       \begin{tabular}{ll}
-        \textbf{Er referens} & %(your_ref)s \\
-        \textbf{Vår referens} & %(our_ref)s \\
+        \textbf{Er referens} & YOURREF \\
+        \textbf{Vår referens} & OURREF \\
         \textbf{Betalningsvilkor} & 30 dagar
       \end{tabular}
     \end{minipage}}
@@ -90,7 +90,7 @@ content = r'''\documentclass[a4paper,11pt]{article}
 \begin{tabular*}{\linewidth}{cp{8.9cm}rcr}\hline\hline
 \textbf{Post} & \textbf{Benämning}  & \multicolumn{1}{l}{\textbf{\`A-pris}} &  \multicolumn{1}{l}{\textbf{Antal}} & \multicolumn{1}{l}{\textbf{Summa}} \\
 \hline
-    %(products)s
+    PRODUCTS
 
     &&&&\\[5em]
 
@@ -116,4 +116,4 @@ content = r'''\documentclass[a4paper,11pt]{article}
       \end{tabularx}
     \end{minipage}}}
 
-\end{document}'''
+\end{document}
