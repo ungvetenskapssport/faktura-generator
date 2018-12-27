@@ -12,6 +12,7 @@
 \usepackage{longtable}
 
 
+\usepackage[export]{adjustbox}
 \usepackage{fancybox}
 \usepackage[margin=2cm,top=3cm]{geometry}
 
@@ -51,7 +52,8 @@
 \setlength{\parindent}{0pt}
 \cornersize{.3}
 
-{\huge Ung Vetenskapssport}
+\includegraphics[width=0.2\textwidth]{logo.png}
+%{\huge Ung Vetenskapssport}
 
 
 
@@ -70,20 +72,25 @@
       \textbf{Fakturadatum:}\\ INVOICEDATE
     \end{minipage}}}
 
+\fancyput*(230pt,-137pt){\ovalbox{
+    \begin{minipage}{215pt}
+      \textbf{Förofallodatum:} LASTDATE
+    \end{minipage}}}
+
 \vspace{3em}
 \textbf{Fakturaadress:}\\[1em]
 ADDRESS
 
-\fancyput*(230pt,-172pt){
+\fancyput*(230pt,-187pt){
     \begin{minipage}{85pt}
       \begin{tabular}{ll}
         \textbf{Er referens} & YOURREF \\
-        \textbf{Vår referens} & OURREF \\
+        \textbf{Vår referens} & UVSREF \\
         \textbf{Betalningsvilkor} & 30 dagar
       \end{tabular}
     \end{minipage}}
 
-\vspace{15em}
+\vspace{10em}
 
 
 \renewcommand\arraystretch{1.5}
@@ -94,6 +101,8 @@ ADDRESS
 
     &&&&\\[5em]
 
+    \multicolumn{4}{r@{~~~}}{\textbf{Moms(0\%)}} & 0 kr\\
+    \multicolumn{4}{r@{~~~}}{\textbf{Frakt}} & 0 kr\\
     \multicolumn{4}{r@{~~~}}{\textbf{Att betala}} & \totalttc\\
 \hline\hline
 \end{tabular*}
@@ -108,11 +117,11 @@ ADDRESS
 \fancyput*(-17pt,-670pt){\mbox{
     \begin{minipage}{530pt}
       \begin{tabularx}{530pt}{XXX}
-      \textbf{Adress:}  & \textbf{Kontonummer} & \textbf{Organisationsnummer} \\
-      Ditt Företag      & 1234.12.345.67       & 123456-7890 \\
-      Företagsvägen 3   &                      &  \\
-      543 21~~Företagsstaden & \textbf{Bank}        & \textbf{Momsreg} \\
-                        & Företagsbanken       & SE123456789012 \\
+      \textbf{Adress:}  & \textbf{Bankgiro} & \textbf{Organisationsnummer} \\
+      Ung Vetenskapssport       & 5059-9174             & 802499-2623 \\
+        c/o Lars Åström         &                       &  \\
+      Kämnärsvägen 21F, Lgh 1203& \textbf{Email}         & \textbf{Hemsida} \\
+      22646 LUND                & styrelsen@ungvetenskapssport.se  & ungvetenskapssport.se \\
       \end{tabularx}
     \end{minipage}}}
 
