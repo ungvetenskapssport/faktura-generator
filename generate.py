@@ -28,8 +28,8 @@ def produce_pdf(d, out):
 
 def get_inject(i, row):
     d = {"INVOICENUMBER": str(i), 
-    "INVOICEDATE": "2018-12-26", 
-    "LASTDATE" : "2019-01-25",
+    "INVOICEDATE": "2018-12-28", 
+    "LASTDATE" : "2019-01-27",
     "UVSREF": "Lars Åström",
     }
     d["YOURREF"] = row["Referens"]
@@ -40,19 +40,23 @@ def get_inject(i, row):
 def get_products(elever, lärare):
     s = []
     if int(elever):
-        s.append(r"\product{Programmeringsläger elev}{1500.0}{" + str(elever) + "}")
+        s.append(r"\product{Programmeringsläger elev 1-3 februari i Lund}{1500.0}{" + str(elever) + "}")
     if int(lärare):
-        s.append(r"\product{Programmeringsläger lärare}{3000.0}{" + str(lärare) + "}")
+        s.append(r"\product{Programmeringsläger lärare 1-3 februari i Lund}{3000.0}{" + str(lärare) + "}")
     return "\\\\\n".join(s)
 
 
 if __name__ == '__main__':
     import csv
     args = get_args()
-    with open('anmalningar.csv') as csvfile:
+    out_folder = args.outdir.rstrip('/')
+    try:
+        os.makedirs(out_folder)
+    except: pass
+    with open(args.csv) as csvfile:
         reader = csv.DictReader(csvfile, delimiter=';')
         for i, row in enumerate(reader):
             fno = i + args.startindex
             inject_dict = get_inject(fno, row)
             print(inject_dict)
-            produce_pdf(inject_dict, '{}.pdf'.format(fno))
+            produce_pdf(inject_dict, '{}/{}.pdf'.format(args.outdir.rstrip('/'), fno))
