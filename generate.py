@@ -8,6 +8,18 @@ def get_args():
     parser.add_argument('-i', '--startindex', type=int, default=1) 
     return parser.parse_args()
 
+cfg = {
+        "ADDR":["Addressrad 1: (Postadress)",
+            "Adressrad 2: (Fortstn. postadress)",
+            "Adressrad 3: (Postnummer)",
+            "Adressrad 4 (Postort)"],
+        "YOURREF" : "Referensnamn till faktura och kuvert",
+        "NOELEVER": "Varav antal Elever:",
+        "NOTEACH": "Varav antal Lärare:",
+        "NAMES" : "Namn på  alla lägerdeltagare (rad-separerade)",
+        "EMAILS" : "Epost till alla lägerdeltagare (rad-separerade)"
+        }
+
 
 def produce_pdf(d, out):
     content = open('template.tex', 'r').read()
@@ -32,10 +44,22 @@ def get_inject(i, row):
     "LASTDATE" : "2019-01-27",
     "UVSREF": "Lars Åström",
     }
-    d["YOURREF"] = row["Referens"]
-    d["ADDRESS"] = '\\\\\n'.join(row["Adress"].split('\n'))
-    d["PRODUCTS"] = get_products(row["Anmälda Elever"], row["Anmälda Lärare"])
+    d["YOURREF"] = row[cfg["YOURREF"]]
+    addr = [row[addr_row] for addr_row in cfg["ADDR"]]
+    d["ADDRESS"] = '\\\\\n'.join(filter(lambda x: x, addr))
+    d["PRODUCTS"] = get_products(row[cfg["NOELEVER"]], row[cfg["NOTEACH"]])
     return d
+
+def get_participants(row):
+    stud, teach = int(row[cfg["NOELEVER"]]), int(row[cfg["NOTEACH"]])
+    names = row[cfg["NAMES"]].strip().replace('\r', '\n').split('\n')
+    emails = row[cfg["EMAILS"]].strip().replace('\r', '\n').split('\n')
+    warnings = []
+    if stud + teach != len(names):
+        warnings.append("wrong number of names {} {} {}".fromat(stud + teach, names, emails))
+    if stud + teach != len(emails):
+        warnings.append("wrong number of emails {} {} {}".format(stud + teach, names, emails))
+    return names, emails, warnings
 
 def get_products(elever, lärare):
     s = []
@@ -46,6 +70,7 @@ def get_products(elever, lärare):
     return "\\\\\n".join(s)
 
 
+
 if __name__ == '__main__':
     import csv
     args = get_args()
@@ -53,10 +78,20 @@ if __name__ == '__main__':
     try:
         os.makedirs(out_folder)
     except: pass
+    persons = []
+    warnings = []
     with open(args.csv) as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=';')
+        reader = csv.DictReader(csvfile, delimiter=',')
         for i, row in enumerate(reader):
             fno = i + args.startindex
             inject_dict = get_inject(fno, row)
+            names, emails, ws = get_participants(row)
+            warnings.extend(ws)
+            for i in range(max(len(names), len(emails))):
+                name = names[i] if i < len(names) else "-"
+                email = emails[i] if i < len(emails) else "-"
+                persons.append('{};{}'.format(name, email))
             print(inject_dict)
             produce_pdf(inject_dict, '{}/{}.pdf'.format(args.outdir.rstrip('/'), fno))
+    print('\n'.join(persons))
+    print('\n'.join(warnings))
