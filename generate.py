@@ -9,7 +9,8 @@ def get_args():
     return parser.parse_args()
 
 cfg = {
-        "ADDR":["Addressrad 1: (Postadress)",
+        "ADDR":["Addressrad 0", 
+            "Addressrad 1: (Postadress)",
             "Adressrad 2: (Fortstn. postadress)",
             "Adressrad 3: (Postnummer)",
             "Adressrad 4 (Postort)"],
@@ -40,12 +41,13 @@ def produce_pdf(d, out):
 
 def get_inject(i, row):
     d = {"INVOICENUMBER": str(i), 
-    "INVOICEDATE": "2018-12-28", 
-    "LASTDATE" : "2019-01-27",
+    "INVOICEDATE": "2018-01-13", 
+    "LASTDATE" : "2019-02-12",
     "UVSREF": "Lars Åström",
     }
     d["YOURREF"] = row[cfg["YOURREF"]]
     addr = [row[addr_row] for addr_row in cfg["ADDR"]]
+    addr = addr[:-2] + [addr[-2] + " " +  addr[-1]]
     d["ADDRESS"] = '\\\\\n'.join(filter(lambda x: x, addr))
     d["PRODUCTS"] = get_products(row[cfg["NOELEVER"]], row[cfg["NOTEACH"]])
     return d

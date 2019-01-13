@@ -62,26 +62,27 @@
       \huge Faktura
     \end{minipage}}}
 
-\fancyput*(230pt,-82pt){\ovalbox{
+\fancyput*(230pt,-187pt){\ovalbox{
     \begin{minipage}{87pt}
       \textbf{Fakturanummer:}\\ INVOICENUMBER 
     \end{minipage}}}
 
-\fancyput*(358pt,-82pt){\ovalbox{
+\fancyput*(358pt,-187pt){\ovalbox{
     \begin{minipage}{87pt}
       \textbf{Fakturadatum:}\\ INVOICEDATE
     \end{minipage}}}
 
-\fancyput*(230pt,-137pt){\ovalbox{
+\fancyput*(230pt,-242pt){\ovalbox{
     \begin{minipage}{215pt}
       \textbf{Förofallodatum:} LASTDATE
     \end{minipage}}}
 
-\vspace{3em}
-\textbf{Fakturaadress:}\\[1em]
-ADDRESS
+\fancyput*(230pt,-62pt){
+  \begin{minipage}[t]{215pt}
+        ADDRESS
+    \end{minipage}}
 
-\fancyput*(230pt,-187pt){
+\fancyput*(-25pt,-187pt){
     \begin{minipage}{85pt}
       \begin{tabular}{ll}
         \textbf{Er referens} & YOURREF \\
@@ -90,7 +91,7 @@ ADDRESS
       \end{tabular}
     \end{minipage}}
 
-\vspace{5em}
+\vspace{15em}
 
 
 \renewcommand\arraystretch{1.5}
