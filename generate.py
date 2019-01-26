@@ -1,6 +1,7 @@
 import subprocess
 import os
 import argparse
+import datetime
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--csv')
@@ -39,10 +40,16 @@ def produce_pdf(d, out):
     for v in suffx:
         os.unlink(tmpprefix + v)
 
+def dt_str():
+    def tostr(dt):
+        return "{}-{}-{}".format(dt.year, dt.month, dt.day)
+    d = datetime.date.today()
+    return tostr(d), tostr(d + datetime.timedelta(days=30))
+
 def get_inject(i, row):
     d = {"INVOICENUMBER": str(i), 
-    "INVOICEDATE": "2018-01-13", 
-    "LASTDATE" : "2019-02-12",
+    "INVOICEDATE": dt_str()[0], 
+    "LASTDATE" : dt_str()[1],
     "UVSREF": "Lars Åström",
     }
     d["YOURREF"] = row[cfg["YOURREF"]]
@@ -58,7 +65,7 @@ def get_participants(row):
     emails = row[cfg["EMAILS"]].strip().replace('\r', '\n').split('\n')
     warnings = []
     if stud + teach != len(names):
-        warnings.append("wrong number of names {} {} {}".fromat(stud + teach, names, emails))
+        warnings.append("wrong number of names {} {} {}".format(stud + teach, names, emails))
     if stud + teach != len(emails):
         warnings.append("wrong number of emails {} {} {}".format(stud + teach, names, emails))
     return names, emails, warnings
@@ -92,7 +99,7 @@ if __name__ == '__main__':
             for i in range(max(len(names), len(emails))):
                 name = names[i] if i < len(names) else "-"
                 email = emails[i] if i < len(emails) else "-"
-                persons.append('{};{}'.format(name, email))
+                persons.append('{}\t{}\t{}\t{}'.format(name, email, row['Namn, anmälare'], row['E-postadress']))
             print(inject_dict)
             produce_pdf(inject_dict, '{}/{}.pdf'.format(args.outdir.rstrip('/'), fno))
     print('\n'.join(persons))
