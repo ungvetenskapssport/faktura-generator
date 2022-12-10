@@ -6,19 +6,18 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--csv')
     parser.add_argument('-o', '--outdir', default='out')
-    parser.add_argument('-i', '--startindex', type=int, default=1) 
+    parser.add_argument('-i', '--startindex', type=int, default=1)
     return parser.parse_args()
 
 cfg = {
-        "ADDR":["Addressrad 0", 
+        "ADDR":[
             "Addressrad 1: (Postadress)",
             "Adressrad 2: (Fortstn. postadress)",
             "Adressrad 3: (Postnummer)",
             "Adressrad 4 (Postort)"],
-        "YOURREF" : "Referensnamn till faktura och kuvert",
-        "NOELEVER": "Varav antal Elever:",
-        "NOTEACH": "Varav antal Lärare:",
-        "NAMES" : "Namn på  alla lägerdeltagare (rad-separerade)",
+        "YOURREF" : "Referensnamn/nummer till faktura",
+        "NOELEVER": "Hur många deltagare anmäler du? (skriv ett tal)",
+        "NAMES" : "Namn på alla lägerdeltagare (rad-separerade)",
         "EMAILS" : "Epost till alla lägerdeltagare (rad-separerade)"
         }
 
@@ -34,7 +33,7 @@ def produce_pdf(d, out):
     proc.communicate()
     if not proc.returncode == 0:
         print('Error while generating {}'.format(out))
-        return
+        exit(1)
     os.rename(tmpprefix + '.pdf', out)
     suffx = ['.aux', '.tex', '.log']
     for v in suffx:
@@ -47,35 +46,33 @@ def dt_str():
     return tostr(d), tostr(d + datetime.timedelta(days=30))
 
 def get_inject(i, row):
-    d = {"INVOICENUMBER": str(i), 
-    "INVOICEDATE": dt_str()[0], 
+    d = {"INVOICENUMBER": str(i),
+    "INVOICEDATE": dt_str()[0],
     "LASTDATE" : dt_str()[1],
-    "UVSREF": "Lars Åström",
+    "UVSREF": "Julia Mårtensson",
     }
     d["YOURREF"] = row[cfg["YOURREF"]]
     addr = [row[addr_row] for addr_row in cfg["ADDR"]]
     addr = addr[:-2] + [addr[-2] + " " +  addr[-1]]
     d["ADDRESS"] = '\\\\\n'.join(filter(lambda x: x, addr))
-    d["PRODUCTS"] = get_products(row[cfg["NOELEVER"]], row[cfg["NOTEACH"]])
+    d["PRODUCTS"] = get_products(row[cfg["NOELEVER"]])
     return d
 
 def get_participants(row):
-    stud, teach = int(row[cfg["NOELEVER"]]), int(row[cfg["NOTEACH"]])
+    stud = int(row[cfg["NOELEVER"]])
     names = row[cfg["NAMES"]].strip().replace('\r', '\n').split('\n')
     emails = row[cfg["EMAILS"]].strip().replace('\r', '\n').split('\n')
     warnings = []
-    if stud + teach != len(names):
-        warnings.append("wrong number of names {} {} {}".format(stud + teach, names, emails))
-    if stud + teach != len(emails):
-        warnings.append("wrong number of emails {} {} {}".format(stud + teach, names, emails))
+    if stud != len(names):
+        warnings.append("wrong number of names {} {} {}".format(stud, names, emails))
+    if stud != len(emails):
+        warnings.append("wrong number of emails {} {} {}".format(stud, names, emails))
     return names, emails, warnings
 
-def get_products(elever, lärare):
+def get_products(elever):
     s = []
     if int(elever):
-        s.append(r"\product{Programmeringsläger elev 1-3 februari i Lund}{1500.0}{" + str(elever) + "}")
-    if int(lärare):
-        s.append(r"\product{Programmeringsläger lärare 1-3 februari i Lund}{3000.0}{" + str(lärare) + "}")
+        s.append(r"\product{Matematikläger elev 13-15 maj i Lund}{750.00}{" + str(elever) + "}")
     return "\\\\\n".join(s)
 
 
