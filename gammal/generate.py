@@ -2,20 +2,6 @@ import subprocess
 import os
 import argparse
 import datetime
-
-uvsref = "FYLL I REFERENS"   #ex. Jiachen Mi
-forstaFakturanummer = 0     #ex. 250001 för första fakturan år 2025
-organisation = "FYLL I ORGANISATION"   #ex. UNG VETENSKAPSSPORT   
-orgnummer = "FYLL I ORG NUMMER" #ex. 999802499-2623
-bankgiro = "FYLL I BANKGIRO"   #ex. 392-5492
-email = "FYLL I MEJL"   #ex. kassor@ungvetenskapssport.se
-adress1 = "ADRESS DEL 1"    #ex. c/o Jiachen Mi
-adress2 = "ADRESS DEL 2"    #ex. Lägergränden 22
-adress3 = "ADRESS DEL 3"    #ex. 22648 Lund
-hemsida = "FYLL I HEMSIDA"  #ex. ungvetenskapssport.se
-produktnamn = "FYLL I PRODUKTNAMN"  #ex. Matematikläger elev 13-15 maj i Lund
-pris = "750.00" #ex. 750.00
-
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--csv')
@@ -60,25 +46,16 @@ def dt_str():
     return tostr(d), tostr(d + datetime.timedelta(days=30))
 
 def get_inject(i, row):
-    d = {"INVOICENUMBER": str(i+forstaFakturanummer-1),
+    d = {"INVOICENUMBER": str(i),
     "INVOICEDATE": dt_str()[0],
     "LASTDATE" : dt_str()[1],
-    "UVSREF": uvsref,
-    "ORGANISATION": organisation,
-    "ORGNUMMER": orgnummer,
-    "BANKGIRO": bankgiro, 
-    "EMAIL": email, 
-    "ADRESS1": adress1, 
-    "ADRESS2": adress2, 
-    "ADRESS3": adress3,
-    "HEMSIDA": hemsida
+    "UVSREF": "Julia Mårtensson",
     }
     d["YOURREF"] = row[cfg["YOURREF"]]
     addr = [row[addr_row] for addr_row in cfg["ADDR"]]
     addr = addr[:-2] + [addr[-2] + " " +  addr[-1]]
     d["ADDRESS"] = '\\\\\n'.join(filter(lambda x: x, addr))
     d["PRODUCTS"] = get_products(row[cfg["NOELEVER"]])
-    #konstanter
     return d
 
 def get_participants(row):
@@ -92,17 +69,13 @@ def get_participants(row):
         warnings.append("wrong number of emails {} {} {}".format(stud, names, emails))
     return names, emails, warnings
 
-# def get_products(elever):
-#     s = []
-#     if int(elever):
-#         s.append(r"\product{Matematikläger elev 13-15 maj i Lund}{750.00}{" + str(elever) + "}")
-#     return "\\\\\n".join(s)
-
 def get_products(elever):
     s = []
     if int(elever):
-        s.append(r"\product" + "{" + produktnamn + "}{" + pris + "}{" + str(elever) + "}")
+        s.append(r"\product{Matematikläger elev 13-15 maj i Lund}{750.00}{" + str(elever) + "}")
     return "\\\\\n".join(s)
+
+
 
 if __name__ == '__main__':
     import csv
@@ -123,7 +96,7 @@ if __name__ == '__main__':
             for i in range(max(len(names), len(emails))):
                 name = names[i] if i < len(names) else "-"
                 email = emails[i] if i < len(emails) else "-"
-                persons.append('{}\t{}\t{}\t{}'.format(name, email, row['Namn anmälare'], row['E-postadress']))
+                persons.append('{}\t{}\t{}\t{}'.format(name, email, row['Namn, anmälare'], row['E-postadress']))
             print(inject_dict)
             produce_pdf(inject_dict, '{}/{}.pdf'.format(args.outdir.rstrip('/'), fno))
     print('\n'.join(persons))
