@@ -1,0 +1,2 @@
+Referensnamn/nummer till faktura,Hur många deltagare anmäler du? (skriv ett tal),Namn på alla lägerdeltagare (rad-separerade),Epost till alla lägerdeltagare (rad-separerade),Addressrad 1: (Postadress),Adressrad 2: (Fortstn. postadress),Adressrad 3: (Postnummer),Adressrad 4 (Postort),Namn anmälare,E-postadress
+John Doe,2,Alice Johnson\nBob Smith,"alice@example.com\nbob@example.com","Street 123","Apartment 4B","12345","Stockholm","John Doe","johndoe@example.com"
